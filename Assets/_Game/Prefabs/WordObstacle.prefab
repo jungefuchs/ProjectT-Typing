@@ -195,6 +195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3405312291985446840}
   - component: {fileID: 3405312291985446847}
+  - component: {fileID: 9160252651887709253}
   m_Layer: 0
   m_Name: WordObstacle
   m_TagString: Untagged
@@ -232,6 +233,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3405312291985446841}
   m_CullTransparentMesh: 1
+--- !u!114 &9160252651887709253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3405312291985446841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e73eea0fc658403aa54f7d0bbc26d386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testWord: 
+  text: {fileID: 3405312292032020636}
 --- !u!1 &3405312292032020638
 GameObject:
   m_ObjectHideFlags: 0
