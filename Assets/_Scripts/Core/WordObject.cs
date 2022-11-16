@@ -14,6 +14,7 @@ namespace RS.Typing.Core {
         
         private static WordObject _lockedWordObject;
         private Action _wordDestroyed;
+        private IDisposable _inputCall;
 
         private float _speed;
         private string _word;
@@ -27,13 +28,17 @@ namespace RS.Typing.Core {
             text.text = _word;
             transform.position = position;
             
-            InputSystem.onAnyButtonPress.Call(ctrl => {
-                if (ctrl.name.Length == 1) AttemptInput(ctrl.name);
-            });
+            _inputCall = InputSystem.onAnyButtonPress.Call(Action);
+
 
             var player = GameObject.FindGameObjectWithTag("Player");
             StartCoroutine(MoveToOtherTransform(player.transform));
         }
+
+        private void Action(InputControl ctrl) {
+            if (ctrl.name.Length == 1) AttemptInput(ctrl.name);
+        }
+
         private void AttemptInput(string c) {
             if (_lockedWordObject != null && _lockedWordObject != this) return;
             if (!_word.StartsWith(c)) {
@@ -54,6 +59,7 @@ namespace RS.Typing.Core {
         }
         private void CheckEmpty() {
             if (_word == "") {
+                _inputCall.Dispose();
                 _wordDestroyed?.Invoke();
                 _lockedWordObject = null;
             }
