@@ -10,7 +10,7 @@ namespace RS.Typing.Core {
     public class WordObject : MonoBehaviour {
         public string testWord;
         public static event EventHandler WordMatched;
-        
+        private static WordObject _lockedWordObject = null;
         [SerializeField] private TMP_Text text;
         private string _word;
         private bool _attacked;
@@ -33,19 +33,22 @@ namespace RS.Typing.Core {
         }
         private void AttemptInput(string c) {
             if (!_word.StartsWith(c)) return;
-            
+            if (_lockedWordObject != null && _lockedWordObject != this) return;
+            _lockedWordObject = this;
             _word = _word.Remove(0, 1);
             text.text = _word;
             _attacked = true;
-            WordMatched?.Invoke(this, null);
+            
+            WordMatched?.Invoke(_word == "" ? null: this, null);
             CheckEmpty();
+
         }
         private void CheckEmpty() {
             if (_word == "") {
-                Destroy(gameObject);
+                _lockedWordObject = null;
+                Destroy(gameObject);    
             }
         }
-
 
         private IEnumerator MoveToOtherTransform(Transform otherTransform) {
             while (transform.position != otherTransform.position) {
