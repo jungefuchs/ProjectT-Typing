@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -15,7 +14,8 @@ namespace RS.Typing.Core {
             WordObject.WordMatched -= WordObjectOnWordMatched;
         }
 
-        private void WordObjectOnWordMatched(object sender, EventArgs e) {
+        private void WordObjectOnWordMatched(object sender, bool isMatched) {
+            if (!isMatched) return;
             var wordObject = sender as WordObject;
             if (wordObject == null) return;
 

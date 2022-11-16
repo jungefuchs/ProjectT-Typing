@@ -9,9 +9,11 @@ using UnityEngine.InputSystem.Utilities;
 namespace RS.Typing.Core {
     public class WordObject : MonoBehaviour {
         public string testWord;
-        public static event EventHandler WordMatched;
+        public static event EventHandler<bool> WordMatched;
+         
         private static WordObject _lockedWordObject = null;
         [SerializeField] private TMP_Text text;
+        [SerializeField] private float knockBackTime;
         private string _word;
         private bool _attacked;
         
@@ -32,14 +34,17 @@ namespace RS.Typing.Core {
             StartCoroutine(MoveToOtherTransform(player.transform));
         }
         private void AttemptInput(string c) {
-            if (!_word.StartsWith(c)) return;
+            if (!_word.StartsWith(c)) {
+                Error();
+                return;
+            }
             if (_lockedWordObject != null && _lockedWordObject != this) return;
             _lockedWordObject = this;
             _word = _word.Remove(0, 1);
             text.text = _word;
             _attacked = true;
             
-            WordMatched?.Invoke(_word == "" ? null: this, null);
+            WordMatched?.Invoke(_word == "" ? null: this, true);
             CheckEmpty();
 
         }
@@ -50,13 +55,17 @@ namespace RS.Typing.Core {
             }
         }
 
+        private void Error() {
+            WordMatched?.Invoke(this, false);
+        }
+
         private IEnumerator MoveToOtherTransform(Transform otherTransform) {
             while (transform.position != otherTransform.position) {
                 var direction = otherTransform.position - transform.position;
                 transform.Translate(direction.normalized * Time.deltaTime);
 
                 if (_attacked) {
-                    yield return new WaitForSeconds(.1f);
+                    yield return new WaitForSeconds(knockBackTime);
                     _attacked = false;
                 }
                 yield return null;

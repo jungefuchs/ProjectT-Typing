@@ -247,6 +247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testWord: 
   text: {fileID: 3405312292032020636}
+  knockBackTime: 0.15
 --- !u!1 &3405312292032020638
 GameObject:
   m_ObjectHideFlags: 0
