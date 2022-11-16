@@ -25,7 +25,6 @@ namespace RS.Typing.Core {
                 () => Instantiate(wordObjectPrefab, GetRandomPosition(), Quaternion.identity),
                 word => {
                     word.gameObject.SetActive(true);
-                    word.Setup(GetRandomWord(), GetRandomPosition(), ()=> _pool.Release(word));
                 }, 
                 word => word.gameObject.SetActive(false), 
                 word => Destroy(word.gameObject), false, 50, 100);
@@ -45,8 +44,10 @@ namespace RS.Typing.Core {
         }
 
         private void SpawnWords(int amount) {
+            var words = GetRandomWords(amount).ToArray();
             for (var i = 0; i < amount; i++) {
-                _pool.Get();
+                var word = _pool.Get();
+                word.Setup(words[i], GetRandomPosition(), ()=> _pool.Release(word));
             }
             _currentWords = amount;
         }
@@ -65,6 +66,22 @@ namespace RS.Typing.Core {
         private string GetRandomWord() {
             var randInt = Random.Range(0, _wordBank.Count);
             return _wordBank[randInt];
+        }
+
+        private IEnumerable<string> GetRandomWords(int amount) {
+            var words = new List<string>();
+            var random = new System.Random();
+
+            while (words.Count < amount) {
+                var startingChars = words.Select(s => s[0]);
+                var word = _wordBank.ElementAt(random.Next(0, _wordBank.Count));
+                
+                if (words.Contains(word)) continue;
+                if (startingChars.Any(c => c == word[0])) continue;
+                
+                words.Add(word);
+            }
+            return words;
         }
     }
 }
