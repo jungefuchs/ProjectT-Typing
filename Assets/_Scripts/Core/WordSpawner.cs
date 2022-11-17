@@ -27,7 +27,7 @@ namespace RS.Typing.Core {
                     word.gameObject.SetActive(true);
                 }, 
                 word => word.gameObject.SetActive(false), 
-                word => Destroy(word.gameObject), false, 50, 100);
+                word => Destroy(word.gameObject), true, 50, 100);
             SpawnWords(wordsPerWave);
         }
 
@@ -61,11 +61,6 @@ namespace RS.Typing.Core {
                 position = transform.GetChild(randInt).position;
             }
             return position;
-        }
-
-        private string GetRandomWord() {
-            var randInt = Random.Range(0, _wordBank.Count);
-            return _wordBank[randInt];
         }
 
         private IEnumerable<string> GetRandomWords(int amount) {
